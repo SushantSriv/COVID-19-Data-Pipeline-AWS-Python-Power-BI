@@ -1,30 +1,33 @@
+
 # 🦠 COVID-19 Data Pipeline – AWS + Python + Power BI
 
-Dette prosjektet demonstrerer en full datapipeline for COVID-19-data: fra innhenting via API, til lagring i AWS, SQL-spørring med Athena, og visualisering i Power BI. Rapporten fokuserer på utviklingen i Norge og gir innsikt på nasjonalt og fylkesnivå.
+Dette prosjektet demonstrerer en komplett datapipeline for COVID-19-data: fra API til sky, til interaktive visualiseringer i Power BI – med et spesielt fokus på Norge.
 
 ---
 
 ## 📌 Formål
 
-- Hente og prosessere daglige COVID-19-data
-- Bygge en datalake-løsning med AWS S3 og Glue
-- Koble til Athena for SQL-spørringer mot Parquet-data
-- Visualisere utvikling og nøkkeltall med Power BI
+- Hente oppdatert COVID-19-data via API
+- Transformere og lagre data som Parquet på AWS S3
+- Bygge Glue-baserte tabeller og spørre data med Athena
+- Visualisere utviklingen i Power BI med kart og filtre
 
 ---
 
 ## 🏗️ Arkitektur
-- API → Python → Parquet → Amazon S3 → AWS Glue → Amazon Athena → Power BI
 
- 
+```
+API → Python → Parquet → Amazon S3 → AWS Glue → Amazon Athena → Power BI
+```
+
 | Komponent     | Teknologi             | Funksjon |
 |---------------|------------------------|----------|
-| Datakilde     | [covid-api.com](https://covid-api.com) | Tilbyr rådata om smitte, dødsfall og friskmeldte |
-| Databehandling| Python (`pandas`, `pyarrow`, `boto3`) | Henter, transformerer og lagrer som Parquet |
-| Lagring       | Amazon S3             | Skylagring for strukturert data |
-| Katalog       | AWS Glue              | Automatisk tabellopprettelse basert på S3-data |
-| Analyse       | Amazon Athena         | SQL-basert spørring direkte på S3-data |
-| Visualisering | Power BI              | Interaktive dashboards og filtrering |
+| Datakilde     | [covid-api.com](https://covid-api.com) | Daglige smittedata |
+| ETL-skript     | Python (`CovidDataLake.py`) | Henter, behandler og lagrer data |
+| Lagring       | Amazon S3             | Datagrunnlag i Parquet-format |
+| Katalog       | AWS Glue              | Oppretter tabeller fra S3-data |
+| Analyse       | Amazon Athena         | SQL på data i S3 |
+| Visualisering | Power BI              | Interaktiv rapportering og KPI-er |
 
 ---
 
@@ -40,41 +43,52 @@ Dette prosjektet demonstrerer en full datapipeline for COVID-19-data: fra innhen
 
 ## 📊 Power BI-rapport – Innhold
 
-Rapporten er bygget opp som et 3-siders interaktivt dashboard:
+Rapporten består av 3 interaktive sider:
 
-| Side                 | Visualiseringer                              |
-|----------------------|----------------------------------------------|
-| `COVID-19 Oversikt`  | KPI-tall, smittetrend, dødsfall over tid     |
-| `Fylkesvis Analyse`  | Kartvisning og søyler per fylke              |
-| `Utvikling Over Tid` | Daglige endringer og tidsbaserte diagrammer  |
+| Side                 | Innhold                                     |
+|----------------------|---------------------------------------------|
+| `COVID-19 Oversikt`  | KPI-tall, smittetrend, dødsfall per år      |
+| `Fylkesvis Analyse`  | Kart og stolpediagrammer per fylke          |
+| `Utvikling Over Tid` | Daglige endringer i smitte og friske        |
 
-📍 **Filtrering med slicers**:
-- Land (`country_region`)
-- Fylke (`admin_region_1`)
-- Dato (`updated`)
+**Slicere:** Land, Fylke, Dato
 
 ---
 
 ## 📁 Mappestruktur
-COVID-19 Data Pipeline/
-├── covid_to_s3.py # Python-script for ETL
-├── visuals/
-│ └── visuals.png # Skjermbilde av Power BI-rapport
-├── requirements.txt
-├── .gitignore
-├── LICENSE
-└── README.md
 
+```
+.
+├── data/
+├── visuals/
+│   ├── visual1.png
+│   ├── visual2.png
+│   └── visual3.png
+├── CovidDataLake.py
+├── LICENSE
+├── requirements.txt
+└── README.md
+```
+
+---
 
 ## 📤 Power BI-rapportfil
 
-⚠️ `.pbix`-filen er **ikke inkludert i repoet** på grunn av GitHubs filstørrelsesgrense (130 MB > 100 MB).
+⚠️ `.pbix`-filen er ikke lastet opp direkte i repoet (130 MB > GitHubs 100 MB-grense).
 
-📎 Du kan laste ned den fullstendige Power BI-rapporten her:
+📎 Du kan laste ned Power BI-rapporten her:  
+🔗 [Last ned CovidDashboard.pbix fra Google Drive](https://drive.google.com/file/d/1W3mydYUjPIzfFhj7hl0fo3b2gdwucNN6/view?usp=sharing)
 
-🔗 **[Last ned CovidDashboard.pbix fra Google Drive](https://drive.google.com/file/d/DEIN-FIL-ID/view?usp=sharing)**
+📸 Nedenfor finner du forhåndsvisninger av dashboardet:
 
-📸 Forhåndsvisning er tilgjengelig i `visuals/dashboard_preview.png`.
+### Visual 1 – Oversikt og KPI-er
+![Oversikt](visuals/visual1.png)
+
+### Visual 2 – Fylkesvis Analyse
+![Fylkesvis](visuals/visual2.png)
+
+### Visual 3 – Tidsserieutvikling
+![Utvikling](visuals/visual3.png)
 
 ---
 
@@ -82,8 +96,23 @@ COVID-19 Data Pipeline/
 
 ### 1. Klon repoet
 ```bash
-git clone https://github.com/<ditt-brukernavn>/covid-data-lake.git
-cd covid-data-lake
-pip install -r requirements.txt
-python scripts/covid_to_s3.py
+git clone https://github.com/SushantSriv/COVID-19-Data-Pipeline-AWS-Python-Power-BI.git
+cd COVID-19-Data-Pipeline-AWS-Python-Power-BI
+```
 
+### 2. Installer Python-avhengigheter
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Kjør datainnhenting
+```bash
+python CovidDataLake.py
+```
+
+Dette henter COVID-data for Norge og laster opp `.parquet` til S3.
+
+---
+## 📄 Lisens
+
+Lisensiert under [MIT License](LICENSE).
